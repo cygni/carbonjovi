@@ -1,0 +1,17 @@
+{
+  "name": "@cygni/greensoftware-data-indexer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "scripts": {
+    "scrape": "pipenv run python scrape.py",
+    "embed": "pipenv run python embed.py",
+    "start": "pipenv run python main.py",
+    "postinstall": "pipenv install",
+    "do-clean": "rm -rf chroma/* && rm -rf scrape/**"
+  },
+  "keywords": [],
+  "author": "Tommy Wassgren",
+  "private": true,
+  "license": "UNLICENSED"
+}

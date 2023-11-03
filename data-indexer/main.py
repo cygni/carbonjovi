@@ -1,4 +1,4 @@
-import gradio
+import time
 from dotenv import load_dotenv
 
 from langchain.chat_models import ChatOpenAI
@@ -75,13 +75,39 @@ retrieval_qa = ConversationalRetrievalChain(
 
 # gradio.ChatInterface(predict).launch()
 
-initial_prompt = "You are an intelligent assistant helping Cygni and Accenture employees with their Green Software questions. " + \
+start_time = time.time()
+print("Invoking ChatGPT API")
+
+initial_prompt = "You are an intelligent assistant helping Cygni and Accenture employees with their questions regarding green software, digital sustainabilty, environment impact, sustainable solutions etc. " + \
     "Use 'you' to refer to the individual asking the questions even if they ask with 'I' or 'we' or 'my'. " + \
-    "The individuals asking the questions are software developers" + \
+    "The individuals asking the questions are software developers." + \
+    "Only use information from the provided sources." + \
     "For tabular information return it as an html table. Do not return markdown format. "
 
-response = retrieval_qa.run({"question": initial_prompt + 'What is CBAM? Explain it like I am 10 years old please.'})
+response = retrieval_qa.run({"question": initial_prompt + "What are the Green Software Principles?"})
+end_time1 = time.time()
 print(response)
+
+# Calculate elapsed time
+elapsed_time = (end_time1- start_time) * 1000  # time in milliseconds
+print(f"Elapsed time 1: {elapsed_time} ms")
+
+response = retrieval_qa.run({"question": initial_prompt + "What is Cygni?"})
+end_time2 = time.time()
+print(response)
+
+# Calculate elapsed time
+elapsed_time = (end_time2 - end_time1) * 1000  # time in milliseconds
+print(f"Elapsed time 2: {elapsed_time} ms")
+
+
+response = retrieval_qa.run({"question": initial_prompt + "What is Cygni?"})
+end_time3 = time.time()
+print(response)
+
+# Calculate elapsed time
+elapsed_time = (end_time3 - end_time2) * 1000  # time in milliseconds
+print(f"Elapsed time 3: {elapsed_time} ms")
 
 # output:
 # """

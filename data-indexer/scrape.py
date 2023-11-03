@@ -127,6 +127,23 @@ if __name__ == "__main__":
     # Tsi
     sitemap = do_scrape("https://tsi.life/", depth, sitemap)
 
+    # SDI Alliance
+    sitemap = do_scrape("https://sdialliance.org", depth, sitemap)
+
+    # Certificates and training
+    sitemap = do_scrape("https://training.linuxfoundation.org/training/green-software-for-practitioners-lfc131/", 0, sitemap)
+    sitemap = do_scrape("https://www.credly.com/org/the-linux-foundation/badge/lfc131-green-software-for-practitioners", 0, sitemap)
+
+    # Cygni/Accenture
+    sitemap = do_scrape("https://cts.cygni.se/", depth, sitemap)
+    sitemap = do_scrape("https://cygni.se/", 6, sitemap)
+    sitemap = do_scrape("https://www.accenture.com/se-en/about/company/sweden", 1, sitemap)
+
+    
+    
+    
+    
+
     with open("./scrape/sitemap.json", "w") as f:
         f.write(json.dumps(sitemap))
 
