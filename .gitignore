@@ -1,0 +1,19 @@
+# Dependency directories
+node_modules/
+
+# Build output
+dist/
+
+# Environment variables
+.env
+
+# IDE - Visual Studio Code
+.vscode/
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
