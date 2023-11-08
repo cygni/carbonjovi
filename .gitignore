@@ -1,8 +1,8 @@
 # Dependency directories
-node_modules/
+# node_modules/
 
 # Build output
-dist/
+# dist/
 
 # Environment variables
 .env
@@ -17,3 +17,8 @@ Thumbs.db
 # Logs
 *.log
 
+# Scraped files
+scrape/
+
+# Vector database
+# chroma/

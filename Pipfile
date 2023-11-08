@@ -1,0 +1,19 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+beautifulsoup4 = "4.12.2"
+requests = "2.31.0"
+chromadb = "0.4.15"
+langchain = "0.0.329"
+openai = "0.28.1"
+lxml = "4.9.3"
+tiktoken = "0.5.1"
+gradio = "4.0.2"
+
+[requires]
+python_version = "3.11"
