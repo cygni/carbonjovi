@@ -1,8 +1,12 @@
-# @greensoftware/data-indexer
-Scrapes and indexes/vectorizes a dataset from the web. 
+# @CarbonJovi
+
+@CarbonJovi is a Slack-bot that can answer questions about Green Software.
+
+* The data is fetched from various sources and stored in a Vector database.
+* The Vector database is commited with the project and deployed on disk
+* The Slack-bot is written in Python using Bolt and uses the on-disk Vector database
 
 This indexer is heavily influenced by this article: https://jasonwebster.dev/blog/chatting-to-a-website-with-langchain-openai-and-chromadb
 
-## NPM vs Pipenv
-NPM is used througout the project to invoke all commands but `pipenv` is used for the Python parts. However,
-`npm` is used to wrap the `pipenv`-commands so that devs only need to know about one technology for running/compiling etc.
+## Pipenv
+`pipenv` is used for the Python parts.
