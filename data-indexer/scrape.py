@@ -139,6 +139,17 @@ if __name__ == "__main__":
     sitemap = do_scrape("https://cygni.se/", 6, sitemap)
     sitemap = do_scrape("https://www.accenture.com/se-en/about/company/sweden", 1, sitemap)
 
+    # Misc articles
+    sitemap = do_scrape("https://www.accenture.com/us-en/blogs/federal-viewpoints/green-software", 0, sitemap)
+    sitemap = do_scrape("https://newsroom.accenture.com/news/accenture-github-microsoft-and-thoughtworks-launch-the-green-software-foundation-with-the-linux-foundation-to-put-sustainability-at-the-core-of-software-engineering.htm", 0, sitemap)
+    sitemap = do_scrape("https://www.accenture.com/us-en/blogs/technology-innovation/why-the-world-needs-sustainable-software", 0, sitemap)
+    sitemap = do_scrape("https://www.accenture.com/us-en/insights/strategy/green-behind-cloud", 0, sitemap)
+    sitemap = do_scrape("https://www.accenture.com/se-en/services/sustainability/sustainable-it-technology", 0, sitemap)
+    sitemap = do_scrape("https://www.accenture.com/se-en/services/sustainability-index", 0, sitemap)
+    sitemap = do_scrape("https://sustainabletechpartner.com/topics/talent/goodwill-accenture-launch-green-jobs-training-initiative/", 0, sitemap)
+    sitemap = do_scrape("https://www.verdantix.com/insights/blogs/accenture-accelerates-sustainability-acquisition-activity-with-green-domus-addition", 0, sitemap)
+
+
     
     
     

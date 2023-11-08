@@ -84,7 +84,7 @@ initial_prompt = "You are an intelligent assistant helping Cygni and Accenture e
     "Only use information from the provided sources." + \
     "For tabular information return it as an html table. Do not return markdown format. "
 
-response = retrieval_qa.run({"question": initial_prompt + "What are the Green Software Principles?"})
+response = retrieval_qa.run({"question": initial_prompt + "What patterns should I consider when setting up a new Kubernetes cluster?"})
 end_time1 = time.time()
 print(response)
 
