@@ -149,11 +149,12 @@ if __name__ == "__main__":
     sitemap = do_scrape("https://sustainabletechpartner.com/topics/talent/goodwill-accenture-launch-green-jobs-training-initiative/", 0, sitemap)
     sitemap = do_scrape("https://www.verdantix.com/insights/blogs/accenture-accelerates-sustainability-acquisition-activity-with-green-domus-addition", 0, sitemap)
 
-
-    
-    
-    
-    
+    # Bon Jovi-stuff
+    sitemap = do_scrape("https://github.com/cygni/carbonjovi-docs/blob/main/README.md", 0, sitemap)
+    sitemap = do_scrape("https://en.wikipedia.org/wiki/Bon_Jovi", 0, sitemap)    
+    sitemap = do_scrape("https://www.bonjovi.com/", depth, sitemap)
+    sitemap = do_scrape("https://www.allmusic.com/artist/bon-jovi-mn0000069534", 1, sitemap)
+    sitemap = do_scrape("https://www.biography.com/musician/jon-bon-jovi", 0, sitemap)
 
     with open("./scrape/sitemap.json", "w") as f:
         f.write(json.dumps(sitemap))

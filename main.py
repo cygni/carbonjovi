@@ -24,7 +24,7 @@ def message_help(message, say):
     print(f"Help requested [user={message['user']}]")
     help_text = f"""
 :wave: <@{message['user']}>, I got your back :green_heart:
-Simply ask me anything about <https://greensoftware.cygni.se|Green Software> as a direct message and I will try to answer!
+Simply ask me anything about <https://greensoftware.cygni.se|Green Software> as a direct *message* and I will try to answer!
 
 Some examples:
 {bullet} What is Green Software?
@@ -33,7 +33,17 @@ Some examples:
 There are a few special quirks, you can also ask for:
 {bullet} `help` shows this text
 """
-    say({"text": help_text, "unfurl_links": False, "unfurl_media": False})
+    
+    say({"type": "mrkdwn", "text": help_text, "unfurl_links": False, "unfurl_media": False})
+#     say({"text": help_text, "type":"mrkdwn", "unfurl_links": False, "unfurl_media": False})
+
+#     {
+#   "type": "section",
+#   "text": {
+#     "type": "mrkdwn",
+#     "text": "New Paid Time Off request from <example.com|Fred Enriquez>\n\n<https://example.com|View request>"
+#   }
+# }
 
 @app.event("im_created")
 def handle_message_events(body, logger):
@@ -48,14 +58,13 @@ def contains_url(string):
     return bool(re.search(url_pattern, string))
 
 def format_response(response):
-    delim = "\n"
-
-    #Check the length of the array, if no sources simply return the answer
-    sources = delim.join(bullet + item for item in response['sources'])
-
-    if contains_url(response['answer']):
+    if len(response['sources']) <= 0:
+        answer = response['answer']
+    elif contains_url(response['answer']):
         answer = response['answer']
     else:
+        delim = "\n"
+        sources = delim.join(bullet + " " + item for item in response['sources'])
         answer = f"""{response['answer']}
 
 Sources:

@@ -107,7 +107,7 @@ def run_query(chain_info, question):
         response = chain.run({"question": initial_prompt + question})
         chain_info["is_new"] = False
     else:
-        response = chain.run({"question": initial_prompt + question})
+        response = chain.run({"question": question})
 
     return response
 
@@ -121,5 +121,5 @@ def query_ai(question, user_id):
     elapsed_time = (end_time- start_time) * 1000  # time in milliseconds
     
     print(f"Elapsed time 1: {elapsed_time} ms")
-    print(type(response))
+
     return response
