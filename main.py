@@ -1,120 +1,84 @@
-import time
+import os
+import json
+import re
+
+from slack_bolt import App
+from slack_bolt.adapter.socket_mode import SocketModeHandler
+
 from dotenv import load_dotenv
-
-from langchain.chat_models import ChatOpenAI
-
-from langchain.chains import LLMChain
-from langchain.chains import create_qa_with_sources_chain
-from langchain.chains import ConversationalRetrievalChain
-from langchain.chains.combine_documents.stuff import StuffDocumentsChain
-
-from langchain.embeddings.openai import OpenAIEmbeddings
-
-from langchain.memory import ConversationBufferMemory
-from langchain.prompts import PromptTemplate
-from langchain.vectorstores import Chroma
-
 load_dotenv()
-llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
 
-condense_question_prompt = """Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.\
-Make sure to avoid using any unclear pronouns.
+import ai
 
-Chat History:
-{chat_history}
-Follow Up Input: {question}
-Standalone question:"""
+# Setup the slack stuff
 
-condense_question_prompt = PromptTemplate.from_template(condense_question_prompt)
+# Initializes your app with your bot token and socket mode handler
+app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
 
-condense_question_chain = LLMChain(
-    llm=llm,
-    prompt=condense_question_prompt,
-)
+bullet = "•"
 
-memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+# Listens to incoming messages that contain "hello"
+# To learn available listener arguments,
+@app.message("help")
+def message_help(message, say):
+    print(f"Help requested [user={message['user']}]")
+    help_text = f"""
+:wave: <@{message['user']}>, I got your back :green_heart:
+Simply ask me anything about <https://greensoftware.cygni.se|Green Software> as a direct message and I will try to answer!
 
-qa_chain = create_qa_with_sources_chain(llm)
+Some examples:
+{bullet} What is Green Software?
+{bullet} What patterns should I consider when setting up a new Kubernetes cluster?
 
-doc_prompt = PromptTemplate(
-    template="Content: {page_content}\nSource: {source}",
-    input_variables=["page_content", "source"],
-)
+There are a few special quirks, you can also ask for:
+{bullet} `help` shows this text
+"""
+    say({"text": help_text, "unfurl_links": False, "unfurl_media": False})
 
-final_qa_chain = StuffDocumentsChain(
-    llm_chain=qa_chain,
-    document_variable_name="context",
-    document_prompt=doc_prompt,
-)
+@app.event("im_created")
+def handle_message_events(body, logger):
+    logger.debug('event.im_created')
+    logger.debug(body)
 
+def contains_url(string):
+    # Regular expression to match URLs
+    url_pattern = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^()\s<>]+|\(([^()\s<>]+|(\([^()\s<>]+\)))*\))+(?:\(([^()\s<>]+|(\([^()\s<>]+\)))*\)|[^`!()\[\]{};:'\".,<>?«»“”‘’]))"
 
-db = Chroma(
-    persist_directory="./chroma",
-    embedding_function=OpenAIEmbeddings(model="text-embedding-ada-002"),
-)
+    # Check if the string contains any URLs
+    return bool(re.search(url_pattern, string))
 
-retrieval_qa = ConversationalRetrievalChain(
-    question_generator=condense_question_chain,
-    retriever=db.as_retriever(),
-    memory=memory,
-    combine_docs_chain=final_qa_chain,
-)
+def format_response(response):
+    delim = "\n"
 
-# def predict(message, history):
-#     response = retrieval_qa.run({"question": message})
-#     responseDict = json.loads(response)
-#     answer = responseDict["answer"]
-#     sources = responseDict["sources"]
+    #Check the length of the array, if no sources simply return the answer
+    sources = delim.join(bullet + item for item in response['sources'])
 
-#     if type(sources) == list:
-#         sources = "\n".join(sources)
+    if contains_url(response['answer']):
+        answer = response['answer']
+    else:
+        answer = f"""{response['answer']}
 
-#     if sources:
-#         return answer + "\n\nSee more:\n" + sources
-#     return answer
+Sources:
+{sources}
+"""
+    return answer
 
-# gradio.ChatInterface(predict).launch()
+@app.event("app_mention")
+def handle_app_mention_events(body, logger):
+    print('event.app_mention')
+    logger.info(body)
 
-start_time = time.time()
-print("Invoking ChatGPT API")
+@app.event("message")
+def handle_message_events(event, say):
+    print(f"event.message [user={event['user']}, text={event['text']}]")
+    question = event['text']
+    say('Contacting my AI brain...')
+    response = ai.query_ai(event['text'], event['user'])
+    print(response)
+    answer = format_response(json.loads(response))
+    say({"text": answer, "unfurl_links": False, "unfurl_media": False})
 
-initial_prompt = "You are an intelligent assistant helping Cygni and Accenture employees with their questions regarding green software, digital sustainabilty, environment impact, sustainable solutions etc. " + \
-    "Use 'you' to refer to the individual asking the questions even if they ask with 'I' or 'we' or 'my'. " + \
-    "The individuals asking the questions are software developers." + \
-    "Only use information from the provided sources." + \
-    "For tabular information return it as an html table. Do not return markdown format. "
-
-response = retrieval_qa.run({"question": initial_prompt + "What patterns should I consider when setting up a new Kubernetes cluster?"})
-end_time1 = time.time()
-print(response)
-
-# Calculate elapsed time
-elapsed_time = (end_time1- start_time) * 1000  # time in milliseconds
-print(f"Elapsed time 1: {elapsed_time} ms")
-
-response = retrieval_qa.run({"question": initial_prompt + "What is Cygni?"})
-end_time2 = time.time()
-print(response)
-
-# Calculate elapsed time
-elapsed_time = (end_time2 - end_time1) * 1000  # time in milliseconds
-print(f"Elapsed time 2: {elapsed_time} ms")
-
-
-response = retrieval_qa.run({"question": initial_prompt + "What is Cygni?"})
-end_time3 = time.time()
-print(response)
-
-# Calculate elapsed time
-elapsed_time = (end_time3 - end_time2) * 1000  # time in milliseconds
-print(f"Elapsed time 3: {elapsed_time} ms")
-
-# output:
-# """
-# {
-#   "answer": "LangChain provides a standard interface for LLMs, which are language models that take a string as input and return a string as output. To use LangChain with LLMs, you need to understand the different types of language models and how to work with them. You can configure the LLM and/or the prompt used in LangChain applications to customize the output. Additionally, LangChain provides prompt management, prompt optimization, and common utilities for working with LLMs. By combining LLMs with other modules in LangChain, such as chains and agents, you can create more complex applications.",
-#   "sources": [
-#     "https://python.langchain.com/docs/get_started/quickstart", "https://python.langchain.com/docs/modules/data_connection/document_loaders/markdown"
-#   ]
-# }
-# """
+# Start the Bot
+if __name__ == "__main__":
+    print("Starting @CarbonJovi")
+    SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start()

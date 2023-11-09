@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f5c31e108ca805f2d4db62c18afea88e0607279da5f468340d92ed82744e582b"
+            "sha256": "6956fb3761bdd6e710d6628f2176a8f11e849d1c6e1ccfba9a25cdb1aa98f303"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -987,7 +987,7 @@
                 "sha256:e44ccb93f30c75dfc0c3aa3ce38f33486a75ec9abadabd4e59f114994a9c4617",
                 "sha256:e509cbc488c735b43b5ffea175235cec24bbc57b227ef1acc691725beb230d1c"
             ],
-            "markers": "python_version < '3.13' and python_version >= '3.9'",
+            "markers": "python_version >= '3.8'",
             "version": "==1.26.1"
         },
         "oauthlib": {
@@ -1500,6 +1500,23 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.16.0"
+        },
+        "slack-bolt": {
+            "hashes": [
+                "sha256:43b121acf78440303ce5129e53be36bdfe5d926a193daef7daf2860688e65dd3",
+                "sha256:63089a401ae3900c37698890249acd008a4651d06e86194edc7b72a00819bbac"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.6'",
+            "version": "==1.18.0"
+        },
+        "slack-sdk": {
+            "hashes": [
+                "sha256:2a8513505cced20ceee22b5b49c11d9545caa6234b56bf0ad47133ea5b357d10",
+                "sha256:9d6ebc4ff74e7983e1b27dbdb0f2bb6fc3c2a2451694686eaa2be23bbb085a73"
+            ],
+            "markers": "python_full_version >= '3.6.0'",
+            "version": "==3.23.0"
         },
         "sniffio": {
             "hashes": [
