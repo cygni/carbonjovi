@@ -64,16 +64,6 @@ def scrape_links(
     
     return sitemap
 
-# def do_scrape(
-#         url: str,
-#         depth,
-#         sitemap: dict
-# ):
-#     parsed = urlparse(url)
-#     print("Scraping [depth=" + str(depth) + ", url=" + url + "]")
-#     sitemap = scrape_links(parsed.scheme, parsed.netloc, parsed.path, depth=depth, sitemap=sitemap)
-#     return sitemap
-
 def do_scrape(
         url: str,
         depth,
@@ -95,13 +85,6 @@ parser = argparse.ArgumentParser()
 # parser.add_argument("--site", type=str, required=True)
 parser.add_argument("--depth", type=int, default=3)
 
-# if __name__ == "__main__":
-#     args = parser.parse_args()
-#     url = urlparse(args.site)
-#     sitemap = scrape_links(url.scheme, url.netloc, url.path, depth=args.depth)
-#     with open("./scrape/sitemap.json", "w") as f:
-#         f.write(json.dumps(sitemap))
-
 if __name__ == "__main__":
     args = parser.parse_args()
 
@@ -117,10 +100,10 @@ if __name__ == "__main__":
 
     # Dimpact links
     sitemap = do_scrape("https://www.networkdee.org/publications/assessing-energy-and-climate-effects-of-digitalization%3A-methodological-challenges-and-key-recommendations", 0, sitemap)
-    sitemap = do_scrape("https://www.sciencedirect.com/science/article/pii/S1364032123002794?trk=feed_main-feed-card_feed-article-content", 0, sitemap)
+    sitemap = do_scrape("https://www.sciencedirect.com/science/article/pii/S1364032123002794", 0, sitemap)
     sitemap = do_scrape("https://www.sciencedirect.com/science/article/abs/pii/S0195925521001116?via%3Dihub", 0, sitemap)
-    sitemap = do_scrape("https://www.cell.com/joule/fulltext/S2542-4351(21)00211-7?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS2542435121002117%3Fshowall%3Dtrue", 1, sitemap)
-    sitemap = do_scrape("https://www.carbontrust.com/", 3, sitemap)
+    sitemap = do_scrape("https://www.cell.com/joule/fulltext/S2542-4351(21)00211-7", 1, sitemap)
+    sitemap = do_scrape("https://www.carbontrust.com/", depth, sitemap)
     sitemap = do_scrape("https://www.iea.org/commentaries/the-carbon-footprint-of-streaming-video-fact-checking-the-headlines", 0, sitemap)
     sitemap = do_scrape("https://about.netflix.com/en/news/the-true-climate-impact-of-streaming", 0, sitemap)
 
@@ -135,7 +118,7 @@ if __name__ == "__main__":
     sitemap = do_scrape("https://www.credly.com/org/the-linux-foundation/badge/lfc131-green-software-for-practitioners", 0, sitemap)
 
     # Cygni/Accenture
-    sitemap = do_scrape("https://cts.cygni.se/", depth, sitemap)
+    # sitemap = do_scrape("https://cts.cygni.se/", depth, sitemap)
     sitemap = do_scrape("https://cygni.se/", 6, sitemap)
     sitemap = do_scrape("https://www.accenture.com/se-en/about/company/sweden", 1, sitemap)
 
@@ -149,8 +132,14 @@ if __name__ == "__main__":
     sitemap = do_scrape("https://sustainabletechpartner.com/topics/talent/goodwill-accenture-launch-green-jobs-training-initiative/", 0, sitemap)
     sitemap = do_scrape("https://www.verdantix.com/insights/blogs/accenture-accelerates-sustainability-acquisition-activity-with-green-domus-addition", 0, sitemap)
 
+    sitemap = do_scrape("https://www.w3.org/blog/2023/introducing-web-sustainability-guidelines/", 0, sitemap)
+    sitemap = do_scrape("https://w3c.github.io/sustyweb/#background-on-wsg", 0, sitemap)
+    sitemap = do_scrape("https://www.sustainablewebmanifesto.com/", 0, sitemap)
+    sitemap = do_scrape("https://sustainablewebdesign.org/", depth, sitemap)
+
     # Bon Jovi-stuff
     sitemap = do_scrape("https://github.com/cygni/carbonjovi-docs/blob/main/README.md", 0, sitemap)
+    sitemap = do_scrape("https://github.com/cygni/carbonjovi-docs/blob/main/CTS.md", 0, sitemap)
     sitemap = do_scrape("https://en.wikipedia.org/wiki/Bon_Jovi", 0, sitemap)    
     sitemap = do_scrape("https://www.bonjovi.com/", depth, sitemap)
     sitemap = do_scrape("https://www.allmusic.com/artist/bon-jovi-mn0000069534", 1, sitemap)
