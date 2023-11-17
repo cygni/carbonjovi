@@ -5,8 +5,6 @@ import re
 
 from slack_bolt.async_app import AsyncApp
 from slack_bolt.adapter.socket_mode.aiohttp import AsyncSocketModeHandler
-from slack_sdk.socket_mode.aiohttp import SocketModeClient
-#from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 from dotenv import load_dotenv
 load_dotenv()
