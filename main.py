@@ -1,9 +1,13 @@
 import os
+import asyncio
+import aiohttp
 import json
 import re
 
-from slack_bolt import App
-from slack_bolt.adapter.socket_mode import SocketModeHandler
+from slack_bolt.async_app import AsyncApp
+from slack_bolt.adapter.socket_mode.aiohttp import AsyncSocketModeHandler
+from slack_sdk.socket_mode.aiohttp import SocketModeClient
+#from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -13,14 +17,14 @@ import ai
 # Setup the slack stuff
 
 # Initializes your app with your bot token and socket mode handler
-app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
+app = AsyncApp(token=os.environ.get("SLACK_BOT_TOKEN"))
 
 bullet = "•"
 
 # Listens to incoming messages that contain "hello"
 # To learn available listener arguments,
 @app.message("help")
-def message_help(message, say):
+async def message_help(message, say):
     print(f"Help requested [user={message['user']}]")
     help_text = f"""
 :wave: <@{message['user']}>, I got your back :green_heart:
@@ -29,32 +33,13 @@ Simply ask me anything about <https://greensoftware.cygni.se|Green Software> as 
 Some examples:
 {bullet} What is Green Software?
 {bullet} What patterns should I consider when setting up a new Kubernetes cluster?
+{bullet} Are you Bon Jovi?
 
 There are a few special quirks, you can also ask for:
 {bullet} `help` shows this text
 """
     # Send the help message to the caller
-    say({"type": "mrkdwn", "text": help_text, "unfurl_links": False, "unfurl_media": False})
-
-#     say({"text": help_text, "type":"mrkdwn", "unfurl_links": False, "unfurl_media": False})
-
-#     {
-#   "type": "section",
-#   "text": {
-#     "type": "mrkdwn",
-#     "text": "New Paid Time Off request from <example.com|Fred Enriquez>\n\n<https://example.com|View request>"
-#   }
-# }
-
-@app.event("reaction_added")
-def handle_message_events(body, client, event, context):
-    print(type(client))
-    print(type(event))
-    print(type(body))
-    result = client.chat_postMessage(channel=context.channel_id, text="thanks!")
-    print("message posted")
-    print(type(result))
-
+    await say({"type": "mrkdwn", "text": help_text, "unfurl_links": False, "unfurl_media": False})
 
 def contains_url(string):
     # Regular expression to match URLs
@@ -64,13 +49,18 @@ def contains_url(string):
     return bool(re.search(url_pattern, string))
 
 def format_response(response):
-    if len(response['sources']) <= 0:
+    urls = response['sources']
+
+    # Filter the list to exclude any URL containing the word "hello"
+    filtered_urls = [url for url in urls if "carbonjovi-docs" not in url]
+
+    if len(filtered_urls) <= 0:
         answer = response['answer']
     elif contains_url(response['answer']):
         answer = response['answer']
     else:
         delim = "\n"
-        sources = delim.join(bullet + " " + item for item in response['sources'])
+        sources = delim.join(bullet + " " + item for item in filtered_urls)
         answer = f"""{response['answer']}
 
 Sources:
@@ -79,27 +69,27 @@ Sources:
     return answer.replace("**", "*")
 
 @app.event("app_mention")
-def handle_app_mention_events(body, client, event):
+async def handle_app_mention_events(body, client, event):
     print('event.app_mention')
 
 
 @app.event("message")
-def handle_message_events(event, say, context, client):
+async def handle_message_events(event, say, context, client):
     print(f"event.message [user={event['user']}, text={event['text']}]")
-    print(type(client))
 
-    # Start a simple wait message
-    #wait_response = say(':hourglass_flowing_sand:')
+    # Adding a reaction to the message asynchronously
+    try:
+        await client.reactions_add(
+            channel=event['channel'],
+            timestamp=event['ts'],
+            name="thumbsup"
+        )
+    except Exception as e:
+        print(f"Error adding reaction: {e}")
 
     # Query the model
-    response = ai.query_ai(event['text'], event['user'])
+    response = await ai.query_ai(event['text'], event['user'])
     answer = format_response(json.loads(response))
-
-
-    # delete the wait message
-    #ts = wait_response["ts"]
-    #client.chat_delete(channel=context.channel_id, ts=ts)
-    #client.chat_update(channel=context.channel_id, ts=ts, text=":seedling:")
 
     print("Event: ")
     print(event)
@@ -108,10 +98,14 @@ def handle_message_events(event, say, context, client):
     if "thread_ts" in event:
         response_message['thread_ts'] = event["thread_ts"]
 
-    # Send the answer as soon as possible
-    say(response_message)
+    # Send the answer
+    await say(response_message)
+
+async def async_main():
+    print("Starting @CarbonJovi")
+    handler = AsyncSocketModeHandler(app, os.environ["SLACK_APP_TOKEN"])
+    await handler.start_async()
 
 # Start the Bot
 if __name__ == "__main__":
-    print("Starting @CarbonJovi")
-    SocketModeHandler(app, os.environ["SLACK_APP_TOKEN"]).start()
+    asyncio.run(async_main())

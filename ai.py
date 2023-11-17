@@ -14,7 +14,6 @@ from langchain.prompts import PromptTemplate
 from langchain.vectorstores import Chroma
 
 print('Setting up chat')
-#llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
 #llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-1106")
 llm = ChatOpenAI(temperature=0, model="gpt-4-1106-preview")
 
@@ -74,17 +73,31 @@ print('Setup of AI completed')
 
 retrieval_chains = {}
 chains = {}
+MAX_QUESTIONS = 3
+
+def does_chain_exist_and_is_it_small_enough(user_id):
+    if user_id in chains:
+        if chains[user_id]["count"] < MAX_QUESTIONS:
+            return True
+        
+    return False
 
 def get_or_create_retrieval_chain(user_id):
     chain_info = {}
-    #chain_info["user_id"] = user_id
 
-    if user_id in chains:
+    if does_chain_exist_and_is_it_small_enough(user_id):
         print(f'Chain already created for user {user_id}')
+        chain_info = chains[user_id]
+        chain_info["count"] += 1
     else:
-        chain_info = {}
-        chain_info["user_id"] = user_id
-        chain_info["is_new"] = True
+        chain_info = {
+            "user_id": user_id,
+            "is_new": True,
+            "count": 0
+        }
+        # chain_info["user_id"] = user_id
+        # chain_info["is_new"] = True
+        # chain_info["count"] = 0
 
         print(f'Creating retrieval chain for user {user_id}')
         memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
@@ -100,23 +113,23 @@ def get_or_create_retrieval_chain(user_id):
 
     return chains[user_id]
 
-def run_query(chain_info, question):
+async def run_query(chain_info, question):
     chain = chain_info.get("chain")
 
     if chain_info.get("is_new"):
-        response = chain.run({"question": initial_prompt + question})
+        response = await chain.arun({"question": initial_prompt + question})
         chain_info["is_new"] = False
     else:
-        response = chain.run({"question": question})
+        response = await chain.arun({"question": question})
 
     return response
 
-def query_ai(question, user_id):
+async def query_ai(question, user_id):
     print(f"Querying the AI [userId={user_id}, question={question}]")
     start_time = time.time()
 
     chain_info = get_or_create_retrieval_chain(user_id)
-    response = run_query(chain_info, question)
+    response = await run_query(chain_info, question)
     end_time = time.time()
     elapsed_time = (end_time- start_time) * 1000  # time in milliseconds
     
