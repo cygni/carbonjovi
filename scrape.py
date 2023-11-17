@@ -82,6 +82,7 @@ def do_scrape(
 
 
 parser = argparse.ArgumentParser()
+# Fix this if dynamic stuff, maybe a file to read from?
 # parser.add_argument("--site", type=str, required=True)
 parser.add_argument("--depth", type=int, default=3)
 
