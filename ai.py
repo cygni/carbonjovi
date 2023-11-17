@@ -70,9 +70,8 @@ All output should be in Markdown format. Keep paragraphs short with simple langu
 """
 
 extra_prompt_every_question = """
-Keep all paragraphs short, keep the language simple – the audience are not native English speakers, use emojis that are suitable for Slack (spice up the language)
+Keep all paragraphs short, keep the language simple – the audience are not native English speakers, use slack-emojis (spice up the language), use humor, use slack syntax.
 """
-
 
 print('Setup of AI completed')
 

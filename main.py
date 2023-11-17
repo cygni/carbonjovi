@@ -50,6 +50,11 @@ def format_response(response):
 
     # Filter the list to exclude any URL containing the word "hello"
     filtered_urls = [url for url in urls if "carbonjovi-docs" not in url]
+    filtered_urls = [url for url in filtered_urls if "cygni.se" not in url]
+    filtered_urls = [url for url in filtered_urls if "accenture.com" not in url]
+    filtered_urls = [url for url in filtered_urls if "bonjovi" not in url]
+    filtered_urls = [url for url in filtered_urls if "bon-jovi" not in url]
+    filtered_urls = [url for url in filtered_urls if "Bon_Jovi" not in url]
 
     if len(filtered_urls) <= 0:
         answer = response['answer']
