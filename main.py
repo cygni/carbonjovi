@@ -114,7 +114,7 @@ async def handle_message_events(event, say, context, client):
     print("Event: ")
     print(event)
 
-    response_message = {"text": ":seedling:\n" + answer, "unfurl_links": False, "unfurl_media": False}
+    response_message = {"text": answer, "unfurl_links": False, "unfurl_media": False}
     if "thread_ts" in event:
         response_message['thread_ts'] = event["thread_ts"]
 
