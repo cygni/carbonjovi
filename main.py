@@ -73,22 +73,42 @@ async def handle_app_mention_events(body, client, event):
     print('event.app_mention')
 
 
-@app.event("message")
-async def handle_message_events(event, say, context, client):
-    print(f"event.message [user={event['user']}, text={event['text']}]")
-
+async def add_reaction(event, client, reaction):
     # Adding a reaction to the message asynchronously
     try:
         await client.reactions_add(
             channel=event['channel'],
             timestamp=event['ts'],
-            name="thumbsup"
+            name=reaction
         )
     except Exception as e:
         print(f"Error adding reaction: {e}")
 
+async def remove_reaction(event, client, reaction):
+    # Adding a reaction to the message asynchronously
+    try:
+        await client.reactions_remove(
+            channel=event['channel'],
+            timestamp=event['ts'],
+            name=reaction
+        )
+    except Exception as e:
+        print(f"Error removing reaction: {e}")
+
+
+@app.event("message")
+async def handle_message_events(event, say, context, client):
+    print(f"event.message [user={event['user']}, text={event['text']}]")
+
+    # Status indicator – message received
+    await add_reaction(event, client, "popcorn")
+
     # Query the model
     response = await ai.query_ai(event['text'], event['user'])
+
+    # Query completed
+    await add_reaction(event, client, "white_check_mark")
+
     answer = format_response(json.loads(response))
 
     print("Event: ")
@@ -100,6 +120,9 @@ async def handle_message_events(event, say, context, client):
 
     # Send the answer
     await say(response_message)
+
+    # Status indicator – message received
+    await remove_reaction(event, client, "popcorn")
 
 async def async_main():
     print("Starting @CarbonJovi")

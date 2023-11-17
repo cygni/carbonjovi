@@ -66,14 +66,19 @@ You communicate via Slack, therefore you are a Slack-bot. Your bot-name is Carbo
 Use 'you' to refer to the individual asking the questions even if they ask with 'I' or 'we' or 'my'. 
 The individuals asking the questions are software developers aspiring to be 'Green Software Practitioners'.
 Only use information from the provided sources.
-All output should be in Markdown format. Keep every paragraph brief with simple language, the audience are not native English speakers.
+All output should be in Markdown format. Keep paragraphs short with simple language, the audience are not native English speakers.
 """
+
+extra_prompt_every_question = """
+Keep all paragraphs short, keep the language simple – the audience are not native English speakers, use emojis that are suitable for Slack (spice up the language)
+"""
+
 
 print('Setup of AI completed')
 
 retrieval_chains = {}
 chains = {}
-MAX_QUESTIONS = 3
+MAX_QUESTIONS = 20
 
 def does_chain_exist_and_is_it_small_enough(user_id):
     if user_id in chains:
@@ -95,9 +100,6 @@ def get_or_create_retrieval_chain(user_id):
             "is_new": True,
             "count": 0
         }
-        # chain_info["user_id"] = user_id
-        # chain_info["is_new"] = True
-        # chain_info["count"] = 0
 
         print(f'Creating retrieval chain for user {user_id}')
         memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
@@ -120,7 +122,7 @@ async def run_query(chain_info, question):
         response = await chain.arun({"question": initial_prompt + question})
         chain_info["is_new"] = False
     else:
-        response = await chain.arun({"question": question})
+        response = await chain.arun({"question": question + extra_prompt_every_question})
 
     return response
 
