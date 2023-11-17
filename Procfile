@@ -1,1 +1,1 @@
-web: python main.py
+web: pipenv install && pipenv run python main.py
