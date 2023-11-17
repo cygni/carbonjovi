@@ -1,6 +1,5 @@
 import os
 import asyncio
-import aiohttp
 import json
 import re
 
