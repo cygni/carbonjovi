@@ -95,7 +95,7 @@ async def remove_reaction(event, client, reaction):
 
 @app.event("message")
 async def handle_message_events(event, say, context, client):
-    print(f"event.message [user={event['user']}, text={event['text']}]")
+    print(f"handle_message_events [user={event['user']}, text={event['text']}]")
 
     # Status indicator – message received
     await add_reaction(event, client, "popcorn")
