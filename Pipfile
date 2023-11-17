@@ -15,6 +15,7 @@ lxml = "4.9.3"
 tiktoken = "0.5.1"
 python-dotenv = "1.0.0" 
 slack-bolt = "1.18.0"
+aiohttp = "*"
 
 [requires]
 python_version = "3.11"
