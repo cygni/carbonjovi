@@ -138,9 +138,12 @@ if __name__ == "__main__":
     sitemap = do_scrape("https://www.sustainablewebmanifesto.com/", 0, sitemap)
     sitemap = do_scrape("https://sustainablewebdesign.org/", depth, sitemap)
 
-    # Bon Jovi-stuff
+    # CarbonJovi-stuff
     sitemap = do_scrape("https://github.com/cygni/carbonjovi-docs/blob/main/README.md", 0, sitemap)
     sitemap = do_scrape("https://github.com/cygni/carbonjovi-docs/blob/main/CTS.md", 0, sitemap)
+    sitemap = do_scrape("https://github.com/cygni/carbonjovi-docs/blob/main/Digital_Sustainability_Package.md", 0, sitemap)
+
+    # Bon Jovi-stuff
     sitemap = do_scrape("https://en.wikipedia.org/wiki/Bon_Jovi", 0, sitemap)    
     sitemap = do_scrape("https://www.bonjovi.com/", depth, sitemap)
     sitemap = do_scrape("https://www.allmusic.com/artist/bon-jovi-mn0000069534", 1, sitemap)
