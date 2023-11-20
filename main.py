@@ -118,7 +118,7 @@ WAIT_SECONDS = 2
 
 TOO_LONG = """:spock-hand: Oops! Your question's a bit too long for me to handle. Could you trim it down a bit? :blush:"""
 
-WAITING_REACTION = "popcord"
+WAITING_REACTION = "popcorn"
 THINKING_REACTION = "brain"
 COMPLETED_REACTION = "white_check_mark"
 
