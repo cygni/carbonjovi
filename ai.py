@@ -70,14 +70,14 @@ All output should be in Slack syntax. Keep all paragrahs short and simple, keep 
 """
 
 extra_prompt_every_question = """
-Keep all paragraphs short, keep the language simple – the audience are not native English speakers, use slack-emojis (spice up the language), use humor, use slack syntax.
-
-Follow these three instructions below in all your responses:
+Follow these 7 instructions below in all your responses:
 1. Use English language only;
 2. Use Enlish alphabet whenever possible;
 3. Do not use Swedish;
 4. Be humorous;
-5. Keep the paragraphs short, and use simple language;
+5. Keep the paragraphs short, and use simple language; 
+6. Try to answer in multiple short paragraphs;
+7. Use Slack emojis;
 """
 
 print('Setup of AI completed')
