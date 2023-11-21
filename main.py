@@ -122,9 +122,29 @@ WAITING_REACTION = "popcorn"
 THINKING_REACTION = "brain"
 COMPLETED_REACTION = "white_check_mark"
 
+
+def is_allowed(user_id):
+    ALLOWED = [
+        "U062LT2RHB4", # Private
+        "U02AZ1HD8", # Emil
+        "U05AR9AQD5L", # Amanda
+        "U89JE2RMJ", # Heidi
+        "U033RS430", # Tommy
+    ]
+
+    if user_id in ALLOWED:
+        return True
+    
+    return False
+
 @app.event("message")
 async def handle_message_events(event, say, client):
     print(f"handle_message_events [user={event['user']}, text={event['text']}]")
+
+
+    if not is_allowed(event["user"]):
+        print(f"Declining [user={event['user']}]")
+        return
 
     # Status indicator – message received
     await add_reaction(event, client, WAITING_REACTION)
