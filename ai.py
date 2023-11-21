@@ -14,8 +14,9 @@ from langchain.prompts import PromptTemplate
 from langchain.vectorstores import Chroma
 
 print('Setting up chat')
-#llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-1106")
-llm = ChatOpenAI(temperature=0.35, model="gpt-4-1106-preview")
+#llm = ChatOpenAI(temperature=0.35, model="gpt-3.5-turbo-1106")
+#llm = ChatOpenAI(temperature=0.5, model="gpt-4-1106-preview")
+llm = ChatOpenAI(temperature=0.5, model="gpt-4")
 
 condense_question_prompt = """Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.
 Make sure to avoid using any unclear pronouns.
@@ -69,20 +70,12 @@ Only use information from the provided sources.
 All output should be in Slack syntax. Keep all paragrahs short and simple, keep the language simple (the audience are not native English speakers). Don't forget to be humorous :smile:
 """
 
-extra_prompt_every_question = """
-Follow these 7 instructions below in all your responses:
-1. Use English language only;
-2. Use Enlish alphabet whenever possible;
-3. Do not use Swedish;
-4. Be humorous;
-5. Keep the paragraphs short, and use simple language; 
-6. Try to answer in multiple short paragraphs;
-7. Use Slack emojis;
+extra_prompt_every_question = """Keep all paragraphs short, keep the language simple – the audience are not native English speakers, use slack-emojis (spice up the language), use humor, use slack syntax.
+All output should be in English.
 """
 
 print('Setup of AI completed')
 
-retrieval_chains = {}
 chains = {}
 MAX_QUESTIONS = 20
 
