@@ -15,8 +15,8 @@ from langchain.vectorstores import Chroma
 
 print('Setting up chat')
 #llm = ChatOpenAI(temperature=0.35, model="gpt-3.5-turbo-1106")
-#llm = ChatOpenAI(temperature=0.5, model="gpt-4-1106-preview")
-llm = ChatOpenAI(temperature=0.5, model="gpt-4")
+#llm = ChatOpenAI(temperature=0.5, model="gpt-4")
+llm = ChatOpenAI(temperature=0.5, model="gpt-4-1106-preview")
 
 condense_question_prompt = """Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.
 Make sure to avoid using any unclear pronouns.
