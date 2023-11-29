@@ -124,18 +124,18 @@ COMPLETED_REACTION = "white_check_mark"
 
 
 def is_allowed(user_id):
-    ALLOWED = [
-        "U062LT2RHB4", # Private
-        "U02AZ1HD8", # Emil
-        "U05AR9AQD5L", # Amanda
-        "U89JE2RMJ", # Heidi
-        "U033RS430", # Tommy
-    ]
+    # ALLOWED = [
+    #     "U02AZ1HD8", # Emil
+    #     "U05AR9AQD5L", # Amanda
+    #     "U89JE2RMJ", # Heidi
+    #     "U033RS430", # Tommy
+    # ]
 
-    if user_id in ALLOWED:
-        return True
+    # if user_id in ALLOWED:
+    #     return True
     
-    return False
+    # return False
+    return True # Always allowed
 
 @app.event("message")
 async def handle_message_events(event, say, client):
