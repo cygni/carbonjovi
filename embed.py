@@ -12,34 +12,48 @@ from langchain.vectorstores import Chroma
 from dotenv import load_dotenv
 load_dotenv()
 
+print("Creating loader")
 loader = DirectoryLoader(
         "./scrape",
         glob="*.html",
         loader_cls=BSHTMLLoader,
         show_progress=True,
         loader_kwargs={"get_text_separator": " "},
+        silent_errors=True,
 )
+
+print("Loading")
 data = loader.load()
 
+print("Creating splitter")
 text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
         chunk_overlap=200,
 )
+
+print("Splitting docs")
 documents = text_splitter.split_documents(data)
 
 # map sources from file directory to web source
+print("Loading sitemap")
 with open("./scrape/sitemap.json", "r") as f:
         sitemap = json.loads(f.read())
 
+print("Looping")
 for document in documents:
         document.metadata["source"] = sitemap[
                 document.metadata["source"].replace(".html", "").replace("scrape/", "")
         ]
 
 embedding_model = OpenAIEmbeddings(model="text-embedding-ada-002")
+
+print("Populating database")
 db = Chroma.from_documents(
     documents, 
     embedding_model,
     persist_directory="./chroma"
 )
+
+print("Persisting database")
 db.persist()
+print("Embed completed")
