@@ -1,22 +1,23 @@
 import time
 
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 
 from langchain.chains import LLMChain
 from langchain.chains import create_qa_with_sources_chain
 from langchain.chains import ConversationalRetrievalChain
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import PromptTemplate
-from langchain.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma
 
 print('Setting up chat')
 #llm = ChatOpenAI(temperature=0.35, model="gpt-3.5-turbo-1106")
 #llm = ChatOpenAI(temperature=0.5, model="gpt-4")
-llm = ChatOpenAI(temperature=0.5, model="gpt-4-1106-preview")
+#llm = ChatOpenAI(temperature=0.5, model="gpt-4-1106-preview")
+llm = ChatOpenAI(temperature=0.5, model="gpt-4-turbo-preview")
 
 condense_question_prompt = """Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.
 Make sure to avoid using any unclear pronouns.
@@ -59,6 +60,7 @@ print('Opening vector database')
 db = Chroma(
     persist_directory="./chroma",
     embedding_function=OpenAIEmbeddings(model="text-embedding-ada-002"),
+    #embedding_function=OpenAIEmbeddings(model="text-embedding-3-small"),
 )
 
 
@@ -121,10 +123,10 @@ async def run_query(chain_info, question):
     chain = chain_info.get("chain")
 
     if chain_info.get("is_new"):
-        response = await chain.arun({"question": initial_prompt + question + extra_prompt_every_question})
+        response = await chain.ainvoke(input={"question": initial_prompt + question + extra_prompt_every_question})
         chain_info["is_new"] = False
     else:
-        response = await chain.arun({"question": question + extra_prompt_every_question})
+        response = await chain.ainvoke(input={"question": question + extra_prompt_every_question})
 
     return response
 

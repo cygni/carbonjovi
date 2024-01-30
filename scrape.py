@@ -26,6 +26,12 @@ def get_response_and_save(url: str):
 def cleanUrl(url: str):
     return url.replace("https://", "").replace("/", "-").replace(".", "_")
 
+skip_these = [
+    "en_wikipedia_org"
+]
+
+scraped = []
+
 def scrape_links(
     scheme: str,
     origin: str,
@@ -35,16 +41,50 @@ def scrape_links(
 ):
     siteUrl = scheme + "://" + origin + path
     cleanedUrl = cleanUrl(siteUrl)
+    cleanedOrigin = cleanUrl(origin)
+    validOrigin = cleanedOrigin + "-"
 
-    if depth < 0:
-        return
+
     if sitemap[cleanedUrl] != "":
         return
 
+    if cleanedUrl in skip_these:
+        return
+    
+    if depth < 0:
+        return
+
+    
+    if cleanedUrl.endswith("_pdf"):
+        print("*** Skipping PDF: " + cleanedUrl)
+        return
+
+    if cleanedUrl.endswith("_jpg"):
+        print("*** Skipping JPG: " + cleanedUrl)
+        return
+
+    if cleanedUrl.endswith("_svg"):
+        print("*** Skipping SVG: " + cleanedUrl)
+        return
+    
+    if cleanedUrl.startswith(cleanedOrigin + "-ru-") or (cleanedUrl.startswith(cleanedOrigin + "-de-")):
+        print("*** Skipping ru/de: " + cleanedUrl)
+        return
+
+    if cleanedUrl.endswith(cleanedOrigin + "-ru") or (cleanedUrl.endswith(cleanedOrigin + "-de")):
+        print("*** Skipping ru/de: " + cleanedUrl)
+        return
+
+    if not ((cleanedOrigin in cleanedUrl) and ((validOrigin in cleanedUrl) or (cleanedOrigin == cleanedUrl))):
+        print("*** Skipping incorrect URL: " + cleanedUrl)
+        return
+
+    print(">>> " + cleanedUrl)
     sitemap[cleanedUrl] = siteUrl
     response = get_response_and_save(siteUrl)
     soup = BeautifulSoup(response.content, "html.parser")
     links = soup.find_all("a")
+    
 
     for link in links:
         href = urlparse(link.get("href"))

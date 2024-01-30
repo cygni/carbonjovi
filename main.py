@@ -176,7 +176,7 @@ async def handle_message_events(event, say, client):
     # Query completed
     await add_reaction(event, client, "white_check_mark")
 
-    formatted_response = format_response(json.loads(formatted_response))
+    formatted_response = format_response(json.loads(formatted_response["answer"]))
 
     response_message = {
         "text": formatted_response["answer"], 
