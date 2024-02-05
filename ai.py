@@ -59,8 +59,8 @@ final_qa_chain = StuffDocumentsChain(
 print('Opening vector database')
 db = Chroma(
     persist_directory="./chroma",
-    embedding_function=OpenAIEmbeddings(model="text-embedding-ada-002"),
-    #embedding_function=OpenAIEmbeddings(model="text-embedding-3-small"),
+    #embedding_function=OpenAIEmbeddings(model="text-embedding-ada-002"),
+    embedding_function=OpenAIEmbeddings(model="text-embedding-3-small"),
 )
 
 

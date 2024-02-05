@@ -36,8 +36,8 @@ for document in documents:
                 document.metadata["source"].replace(".html", "").replace("scrape/", "")
         ]
 
-#embedding_model = OpenAIEmbeddings(model="text-embedding-3-small")
-embedding_model = OpenAIEmbeddings(model="text-embedding-ada-002")
+embedding_model = OpenAIEmbeddings(model="text-embedding-3-small")
+#embedding_model = OpenAIEmbeddings(model="text-embedding-ada-002")
 db = Chroma.from_documents(
     documents, 
     embedding_model,
